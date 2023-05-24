@@ -1,3 +1,57 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server {
+
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(9001);
+
+            System.out.println("Attente de connexion client...");
+
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Client connecté : " + clientSocket.getInetAddress().getHostAddress());
+
+            InputStreamReader inReader = new InputStreamReader(clientSocket.getInputStream());
+            BufferedReader reader = new BufferedReader(inReader);
+
+            OutputStreamWriter outWriter = new OutputStreamWriter(clientSocket.getOutputStream());
+            BufferedWriter writer = new BufferedWriter(outWriter);
+
+            // Boucle pour permettre une communication continue
+            while (true) {
+                // Recevoir le message du client
+                String receivedMessage = reader.readLine();
+                System.out.println("Message reçu du client : " + receivedMessage);
+
+                // Vérifier si la communication doit se terminer
+                if (receivedMessage.equals("exit")) {
+                    break;
+                }
+
+                // Envoyer une réponse au client
+                String messageToSend = "Bonjour client";
+                writer.write(messageToSend);
+                writer.newLine();
+                writer.flush();
+            }
+
+            // Fermer les flux et la connexion
+            reader.close();
+            writer.close();
+            clientSocket.close();
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+/*
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -101,3 +155,4 @@ class MyThreadServer extends Thread {
 		}
 	}
 }
+*/
