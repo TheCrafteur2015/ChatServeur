@@ -8,4 +8,4 @@ COPY Server.java ./
 RUN javac Server.java -encoding utf8
 
 EXPOSE 9001/tcp
-CMD ["java", "-cp", "Server"]
+CMD ["java", "Server"]
